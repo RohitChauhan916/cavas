@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+{% load static %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="{% static 'css/materialize.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<script src="{% static 'js/fabric.js' %}"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/FileSaver.min.js'%}"></script>
+<script src="{% static 'js/materialize.min.js' %}"></script>
+</head>
+<body>
+ <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">Poster</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+      {% if user.is_authenticated %}
+        <li><a href="#">{{user.username}}</a></li>
+        <li><a href="/logout">Logout</a></li>
+        {% else %}
+        <li><a href="/register">Register</a></li>
+        <li><a href="/">Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+</nav>
+{% if messages %}
+    {% for message in messages%}
+        {% if message.tags == 'success' %}
+  <script>
+  M.toast({html: '{{message}}', classes: 'rounded'});
+  </script>
+        {% elif message.tags == 'info' %}
+   <script>
+  M.toast({html: '{{message}}', classes: 'rounded'});
+  </script>   
+        {% elif message.tags == 'warning' %}
+         <script>
+  M.toast({html: '{{message}}', classes: 'rounded'});
+  </script>
+        {% elif message.tags == 'error' %}
+         <script>
+  M.toast({html: '{{message}}', classes: 'rounded'});
+  </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% block content%}
+{% endblock %}
+<script>
+
+
+   $(document).ready(function(){
+    $('ul.tabs').tabs();
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems, options);
+  });
+
+  // Or with jQuery
+
+  $(document).ready(function(){
+    $('select').formSelect();
+  });
+</script>
+</body>
+</html>

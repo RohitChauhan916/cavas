@@ -1,0 +1,220 @@
+{% extends "header.html" %}
+{% block content%}
+<main>
+<div class="container">
+ <div class="row">
+ <div class="col s12 m6 left_bar">
+ <div class="row">
+    <div class="col s12 m4">
+      <ul class="tabs">
+        <li class="tab col"><a class="active" href="#test1">Add Image</a></li>
+        <li class="tab col"><a href="#test2">Add Text</a></li>
+      </ul>
+    </div>
+    <div class="col m8">
+    <div id="test1" class="col s12 ">
+    <div class="file-field input-field">
+      <div class="btn">
+        <span>File</span>
+        <input type="file" id="file">
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" id="file" type="text">
+      </div>
+    </div>
+    </div>
+    <div id="test2" class="col s12">
+    
+    <button class="waves-effect waves-light btn" onclick="addText()">Add Custom Text</button><br>
+	  <select id="font">
+	  <option value="" disabled selected>Font Family</option>
+  <option>arial</option>
+  <option>tahoma</option>
+  <option>times new roman</option>
+  <option>News Sans</option>
+  <option>Olde English Regular</option>
+  <option>Bumple</option>
+  <option>Forficula</option>
+</select>
+<br>
+<input type="color" value="" id="fill" />
+<input type="number" id="size" placeholder="Number"/><br>
+<select id="weight">
+<option value="" selected disabled>Font weight</option>
+<option>normal</option>
+<option>italic</option>
+<option>bold</option>
+</select>
+</div>
+    </div>
+  </div>
+  </div>
+<div class="col s12 m6 bg-canva">
+<div class="content">
+<canvas id="canvas" width="400" height="400"></canvas><br>
+  </div>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed-action-btn">
+  <a class="btn-floating btn-large red">
+    <i class="large material-icons">mode_edit</i>
+  </a>
+  <ul>
+    <li><a class="btn-floating red" onclick="deleteObj()"><i class="material-icons">delete</i></a></li>
+	<li><a class="btn-floating blue modal-trigger" href="#modal1" onclick="setPreview()"><i class="material-icons">remove_red_eye</i></a>
+	<div id="modal1" data-target="modal1" class="modal">
+    <div class="modal-content">
+      <img id="preview"/>
+    </div>
+	</div>
+	</li>
+    <li>
+<form action="" method="POST" id="form1" enctype="multipart/form-data">
+{% csrf_token %}
+<input type="hidden" name="customer" value="{{user.username}}">
+<input type="hidden" name="design_image" id="design_image">
+<button class="btn-floating green" onclick="addImage()" type="submit" id="submit"><i class="material-icons">publish</i></button>
+</form></a>
+	</li>
+  </ul>
+</div>
+</main>
+<script>
+  function addImage()
+{   
+    console.log("In add image");
+    var image_data = canvas.toDataURL();
+    console.log("Image data:", image_data);
+    $('#design_image').val(image_data);
+	$('#form1').submit()
+}
+</script>
+	<script>
+	$(document).ready(function(){
+    $('.modal').modal();
+  });
+</script>
+<Script>
+	var canvas = new fabric.Canvas('canvas',{backgroundColor : "#FFFFFF"});
+	document.getElementById('file').addEventListener("change", function (e) {
+		var file = e.target.files[0];
+		var reader = new FileReader();
+		console.log("reader " + reader)
+		reader.onload = function (f) {
+			var data = f.target.result;
+			fabric.Image.fromURL(data, function (img) {
+				var oImg = img.set({left: 100, top: 100, angle: 0}).scale(0.9);
+				oImg.scaleToWidth(250);
+				oImg.scaleToHeight(250);
+				canvas.add(oImg).renderAll();
+				canvas.setActiveObject(oImg);
+			});
+		};
+		reader.readAsDataURL(file);
+	});
+	
+	$('#fill').change(function(){
+	var obj = canvas.getActiveObject();
+	if(obj){
+		obj.set("fill", this.value)
+	}
+	canvas.renderAll();
+	})
+	
+	$('#font').change(function(){
+  var obj = canvas.getActiveObject();
+  
+  if(obj){
+    // old api
+    // obj.setFontFamily($(this).val());
+    obj.set("fontFamily", this.value);
+  }
+  
+  canvas.renderAll();
+});
+
+	
+	$('#size').change(function(){
+	var obj = canvas.getActiveObject();
+	
+	if(obj){
+		obj.set("fontSize", this.value);
+	}
+	canvas.renderAll();
+	})
+	
+	$('#weight').change(function(){
+	var obj = canvas.getActiveObject();
+	
+	if(obj){
+		obj.set("fontWeight", this.value);
+	}
+	canvas.renderAll();
+	})
+	
+	$('#decoration').change(function(){
+	var obj = canvas.getActiveObject();
+	
+	if(obj){
+		obj.set("textDecoration", this.value);
+	}
+	canvas.renderAll();
+	})
+	
+	function addText(){
+		var oText = new fabric.IText('Type',{
+			left: 100,
+			top: 100,
+		});
+		canvas.add(oText);
+		oText.bringToFront();
+		canvas.setActiveObject(oText);
+		$('#fill, #font, #fontstyle, #decoration').trigger('change');
+	}
+		
+
+function deleteObj(){
+var doomedObj = canvas.getActiveObject();
+  if (doomedObj.type === 'activeSelection') {
+			// active selection needs a reference to the canvas.
+			doomedObj.canvas = canvas;
+			doomedObj.forEachObject(function(obj) {
+      canvas.remove(obj);
+			});
+ }//endif multiple objects
+  else{
+  //If single object, then delete it
+  var activeObject = canvas.getActiveObject();
+    //How to delete multiple objects?
+		//if(activeObject !== null && activeObject.type === 'rectangle') {
+    if(activeObject !== null ) {
+			canvas.remove(activeObject);
+		}
+  }//end else there's a single object
+}
+
+function setPreview(){
+ document.getElementById('preview').src = canvas.toDataURL();
+}
+
+ document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.fixed-action-btn');
+    var instances = M.FloatingActionButton.init(elems, options);
+  });
+
+  // Or with jQuery
+
+  $(document).ready(function(){
+    $('.fixed-action-btn').floatingActionButton();
+  });
+
+$("#submit").click(function(){
+	$("#canvas").get(0).toBlob(function(blob){
+		saveAs(blob, "MYIMG.png");
+	});
+});
+
+</script>
+{% endblock %}
