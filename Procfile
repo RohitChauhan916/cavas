@@ -1,1 +1,1 @@
-web: gununicorn django-canvas.wsgi --log-file -
+web: gunicorn cavas.wsgi --log-file -
