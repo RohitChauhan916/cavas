@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '@=ldq$3@$_xbm3bllefrqfmo=&s20x1wk!=9!u2o*7x#-t03i%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cavas-app.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -133,10 +133,6 @@ if os.getcwd() == '/app':
     DATABASES['default'].update(db_from_env)
     #Honor the 'X-forwarded-Proto' header for request.is_secure().
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-    #Allow all host headers
-    ALLOWED_HOSTS = ['cavas-app.herokuapp.com']
-    DEBUG = True
 
     #Static asset configuration
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
