@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '@=ldq$3@$_xbm3bllefrqfmo=&s20x1wk!=9!u2o*7x#-t03i%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['cavas-app.herokuapp.com', '127.0.0.1']
 
