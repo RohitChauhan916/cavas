@@ -20,7 +20,7 @@ def register(request):
             messages.success(request, f"New Account Created : {username}")
             login(request, user)
             messages.info(request, f"You are Now logged in : {username}")
-            return redirect("/")
+            return redirect("/home")
         else:
             for msg in form.error_messages:
                 messages.error(request, f"{msg}:{form.error_messages[msg]}")
@@ -62,9 +62,7 @@ def updesign(request):
             if request.user.is_authenticated:
                 customer = request.user
                 form, created = Canvas.objects.get_or_create(customer=str(customer), design_image=data)
-            form.save()
-            return HttpResponse("Done")
-            
+            form.save()        
     else:
         form = canvasForm()
     context = {'form':form}
